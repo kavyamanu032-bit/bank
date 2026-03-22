@@ -75,8 +75,8 @@ router.post('/login', async (req, res) => {
 
     res.cookie('token', token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
+      secure: true,
+      sameSite: 'none',
       maxAge: 60 * 60 * 1000,
       path: '/',
     });
@@ -97,7 +97,7 @@ router.post('/logout', async (req, res) => {
       await db.query('DELETE FROM jwt_tokens WHERE token_value = ?', [token]);
     } catch (_) {}
   }
-  res.clearCookie('token', { path: '/', httpOnly: true });
+  res.clearCookie('token', { path: '/', httpOnly: true, secure: true, sameSite: 'none' });
   res.json({ message: 'Logged out' });
 });
 
